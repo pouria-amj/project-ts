@@ -1,32 +1,18 @@
 import { box } from "../../lib"
+import { render } from "../../render"
 
-const minusBtn = document.getElementById('minus') as HTMLButtonElement | null;
-const count = document.getElementById('count') as HTMLParagraphElement | null;
-const plusBtn = document.getElementById('plus') as HTMLButtonElement | null;
-let countNum = 0
-if(count){
-    count.innerHTML = countNum.toString()
-}
-if(minusBtn){
-    minusBtn.addEventListener("click", ()=>{
-        countNum -=1
-        if(count){
-            count.innerHTML = countNum.toString()
-            console.log("countNum")
-        }
-    })
-}
-if(plusBtn){
-    plusBtn.addEventListener("click", () => {
-        countNum += 1 
-        if(count){
-            count.innerHTML = countNum.toString()
-        }
-    })
-}
+
 
 
  export const cart =()=>{
+    type amountType = {
+        number:number
+    }
+    const productAmount : amountType = {
+        number :1
+    }
+    let quantity = [0, 0, 0];
+    let sum = 0;
     return(
         box({
             element:'div',
@@ -105,15 +91,27 @@ if(plusBtn){
                                             children:'-',
                                             attr:{
                                                 class:'text-xl ',
-                                                id:'minus'                                                                                              
+                                                onClick : ()=>{
+                                                    quantity[0] -= 1;
+                                if (quantity[0] < 0)
+                                    quantity[0] = 0;
+                                if(quantity[0] > 0)
+                                    sum -= 120;
+                                if (sum < 0)
+                                    sum = 0;
+                                console.log(sum);
+                                render("product-1-quantity", quantity[0].toString());
+                                render("total", sum.toString());
+                                                }
                                             }
                                         }),
                                         box({
                                             element:'p',
-                                            children:'0',
+                                            children: quantity[0].toString(),
                                             attr:{
-                                                class:'text-xl',
-                                                id:'count'
+                                                class:'text-xl w-4',
+                                                id: "product-1-quantity",
+                                                value:productAmount.number
                                             }
                                         }),
                                         box({
@@ -121,7 +119,13 @@ if(plusBtn){
                                             children:'+',
                                             attr:{
                                                 class:'text-xl',
-                                                id:'plus'
+                                                onClick : ()=>{
+                                                    quantity[0] += 1;
+                                sum += 120;
+                                console.log(sum);
+                                render("product-1-quantity", quantity[0].toString());
+                                render("total", sum.toString());
+                                                }
                                             }
                                         }),
                                     ]                                  
@@ -293,9 +297,10 @@ if(plusBtn){
                         }),
                         box({
                             element:'p',
-                            children:'$120',
+                            children: sum.toString(),
                             attr:{
-                                class:'font-semibold'
+                                class:'font-semibold',
+                                id: "total"
                             }
                         })
                     ]
